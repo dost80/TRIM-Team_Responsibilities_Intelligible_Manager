@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head><meta charset="utf-8"></head>
+    <body>
+        <h2>Welcome to TRIM (Team Responsibilities Intelligible Manager)</h2>
+        {% if request.user.is_authenticated %}
+        You are logged in as: {{ request.user.username }}
+        <p><a href="{% url 'logout' %}">Log out</a></p>
+        {% else %}
+        <p><a href="{% url 'login' %}">Log in</a></p>
+        {% endif %}
+        {% block content %}
+        Welcome.
+        {% endblock %}
+    </body>
+</html>

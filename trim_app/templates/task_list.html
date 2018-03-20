@@ -1,0 +1,28 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <table>
+        <tr>
+            <th>Task</th>
+            <th>Priority</th>
+            <th>Frequency</th>
+            <th>Due</th>
+            <th>Department</th>
+            <th>Responsible</th>
+            <th>Approver</th>
+            <th>Status</th>
+        </tr>
+        {% for task in task_list %}
+        <tr>
+            <td>{{ task.name }}</td>
+            <td>{{ task.get_priority_display }}</td>
+            <td>{{ task.get_frequency_display }}</td>
+            <td>{{ task.get_due_display }}</td>
+            <td>{{ task.department }}</td>
+            <td>{{ task.responsible }}</td>
+            <td>{{ task.approver }}</td>
+            <td>{{ task.get_status_display }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+{% endblock %}

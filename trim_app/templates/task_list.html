@@ -11,6 +11,7 @@
             <th>Responsible</th>
             <th>Approver</th>
             <th>Status</th>
+            <th>End date</th>
         </tr>
         {% for task in task_list %}
         <tr>
@@ -21,7 +22,25 @@
             <td>{{ task.department }}</td>
             <td>{{ task.responsible }}</td>
             <td>{{ task.approver }}</td>
-            <td>{{ task.get_status_display }}</td>
+            <td><a href="{% url 'update-task' task.pk %}">{{ task.get_status_display }}</a></td>
+            <td>{{ task.end_date }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p><a href="{% url 'create-task' %}">Add task</a></p>
+    <table>
+        <tr>
+            <th>User</th>
+            <th>Name</th>
+            <th>Position</th>
+            <th>Team</th>
+        </tr>
+        {% for teammemeber in teammembers_list %}
+        <tr>
+            <td>{{ teammemeber.user }}</td>
+            <td><a href="{% url 'team-member' teammemeber.id %}">{{ teammemeber.name }}</a></td>
+            <td>{{ teammemeber.position }}</td>
+            <td>{{ teammemeber.team }}</td>
         </tr>
         {% endfor %}
     </table>

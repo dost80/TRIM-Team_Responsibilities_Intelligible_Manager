@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+<h3>Task: {{ task.name }}</h3>
+<p>Description: {{ task.description }}</p>
+<p>Priority: {{ task.get_priority_display }}</p>
+<p>Frequency: {{ task.get_frequency_display }}</p>
+<p>Start date: {{ task.start_date }}</p>
+<p>Due: {{ task.get_due_display }}</p>
+<p>Department: {{ task.department }}</p>
+<p>Responsible: {{ task.responsible }}</p>
+<p>Backup: {{ task.backup }}</p>
+<p>Approver: {{ task.approver }}</p>
+<p>Status: <a href="{% url 'update-task' task.pk %}">{{ task.get_status_display }}</a></p>
+<p>End date: {{ task.end_date }}</p>
+<p><a href="{% url 'delete-task' task.pk %}">delete task</a></p>
+<p><a href="{% url 'task-list' %}">Back to task list</a></p>
+{% endblock %}

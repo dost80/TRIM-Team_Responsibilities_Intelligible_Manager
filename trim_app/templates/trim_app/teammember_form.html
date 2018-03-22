@@ -1,9 +1,7 @@
 {% extends "base.html" %}
 {% block content %}
-{{ task.name }}
 <form action="" method="post">{% csrf_token %}
     {{ form.as_p }}
     <input type="submit" value="Save" />
 </form>
-<p><a href="{% url 'main' %}">Back to main page</a></p>
 {% endblock %}

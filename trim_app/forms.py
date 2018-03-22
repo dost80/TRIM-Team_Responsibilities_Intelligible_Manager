@@ -55,7 +55,7 @@ class AddUserForm(forms.Form):
     email = forms.EmailField(label="Email")
 
 
-class TaskListForm(forms.Form):
+class TaskForm(forms.Form):
     name = forms.CharField(label='Task')
     description = forms.CharField(label='Description')
     priority = forms.ChoiceField(label='Priority', choices=PRIORITIES)
@@ -69,3 +69,19 @@ class TaskListForm(forms.Form):
     status = forms.ChoiceField(label='Status', choices=STATUSES)
     end_date = forms.DateTimeField(label='End date')
 
+
+class AddTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = '__all__'
+
+
+class EditTaskForm(forms.ModelForm):
+    class Meta:
+        model = Task
+        fields = ['status', 'end_date']
+
+
+class Search(forms.Form):
+    position = forms.CharField(label='Position', max_length=64)
+    # user = forms.CharField(label='User', max_length=64)

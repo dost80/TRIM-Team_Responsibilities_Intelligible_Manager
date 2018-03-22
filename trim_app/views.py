@@ -2,7 +2,7 @@ from django import forms
 from django.contrib import admin, messages
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.mixins import PermissionRequiredMixin
+from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMixin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views import View
@@ -11,18 +11,36 @@ from django.views.generic.edit import CreateView, DeleteView, UpdateView
 from django.urls import reverse, reverse_lazy
 
 from .models import Team, TeamMember, Task
-from .forms import AddUserForm, LoginForm, TaskListForm, AddTaskForm, EditTaskForm, Search
+from .forms import AddUserForm, LoginForm
+
+
+class MainView(View):
+    def get(self, request):
+        task_list = Task.objects.filter(end_date=None).order_by('due')
+        teammembers_list = TeamMember.objects.all()
+        teams = Team.objects.all()
+        ctx= {
+            'task_list': task_list,
+            'teammembers_list': teammembers_list,
+            'teams': teams
+        }
+        if not request.user.is_authenticated:
+            return redirect('login')
+        return render(
+            request,
+            template_name='main.html',
+            context=ctx
+        )
 
 
 class TaskListView(View):
     def get(self, request):
-        task_list = Task.objects.filter(end_date=None).order_by('due')
-        # task_list = Task.objects.all().order_by('due')
-        teammembers_list = TeamMember.objects.all()
+        task_list = Task.objects.all().order_by('due')
         ctx= {
             'task_list': task_list,
-            'teammembers_list': teammembers_list
         }
+        if not request.user.is_authenticated:
+            return redirect('login')
         return render(
             request,
             template_name='task_list.html',
@@ -90,9 +108,9 @@ class UserLoginView(View):
             user = authenticate(username=username, password=password)
             if user is not None:
                 login(request, user)
-                messages.success(request, "Udało się zalogować")
                 return redirect(reverse('main'))
-            return HttpResponse("No nie koniecznie")
+            messages.success(request, "Wrong username or password, try again or contact an administrator.")
+            return redirect(reverse('login'))
         ctx = {
             'form': form
         }
@@ -109,52 +127,45 @@ class UserLogoutView(View):
         return redirect(reverse('main'))
 
 
-class AddTaskView(View):
-    def get(self, request):
-        form = AddTaskForm()
+class TaskDetailsView(View):
+    def get(self, request, task_id):
+        task = Task.objects.get(id=task_id)
         ctx = {
-            'form': form
+            "task": task
         }
-        return render(
-            request,
-            template_name="task.html",
-            context=ctx
-        )
-
-    def post(self, request):
-        form = AddTaskForm(request.POST)
-        ctx = {
-            'form': form
-        }
-        if form.is_valid():
-            form.save()
-            return redirect(reverse('main'))
-        return render(
-            request,
-            template_name="task.html",
-            context=ctx
-        )
+        return render(request, "task_details.html", ctx)
 
 
 class TaskCreate(CreateView):
     model = Task
     fields = "__all__"
-    success_url = reverse_lazy('main')
+    success_url = reverse_lazy('task-list')
 
 
 class UpdateTask(UpdateView):
+
     model = Task
     # fields = "__all__"
     fields = ['status', 'end_date']
-    success_url = reverse_lazy('main')
+    success_url = reverse_lazy('task-list')
+
+
+class DeleteTask(PermissionRequiredMixin, DeleteView):
+
+    permission_required = 'trim_app.delete_task'
+    raise_exception = True
+
+    model = Task
+    fields = "__all__"
+    success_url = reverse_lazy('task-list')
 
 
 class TeamMemberView(View):
 
     def get(self, request, teammember_id):
         team_member = TeamMember.objects.get(id=teammember_id)
-        tasks_responsible = Task.objects.filter(responsible_id=teammember_id)
-        tasks_approver = Task.objects.filter(approver_id=teammember_id)
+        tasks_responsible = Task.objects.filter(responsible_id=teammember_id).order_by('due')
+        tasks_approver = Task.objects.filter(approver_id=teammember_id).order_by('due')
         ctx = {
             "team_member": team_member,
             "tasks_responsible": tasks_responsible,
@@ -163,26 +174,25 @@ class TeamMemberView(View):
         return render(request, "team_member.html", ctx)
 
 
-class SearchView(View):
-    def get(self, request):
-        form = Search()
-        ctx = {
-            'form': form
-        }
-        return render(request,
-                      template_name="search.html",
-                      context=ctx)
+class AddTeamMemberView(PermissionRequiredMixin, CreateView):
 
-    def post(self, request):
-        form = Search(request.POST)
-        if form.is_valid():
-            position = form.cleaned_data['position']
-            user = form.cleaned_data['task']
-            found_team_members = TeamMember.objects.filter(position__icontains=position)
-            found_user = User.objects.filter(last_name__icontains=user)
-            ctx = {
-                "team_members": found_team_members
-            }
-            return render(request,
-                          template_name="search_result.html",
-                          context=ctx)
+    permission_required = 'trim_app.add_teammember'
+    raise_exception = True
+
+    model = TeamMember
+    fields = "__all__"
+    success_url = reverse_lazy('main')
+
+
+class TeamView(View):
+
+    def get(self, request, id):
+        team = Team.objects.get(id=id)
+        team_members = TeamMember.objects.filter(team_id=id)
+        tasks = Task.objects.filter(department_id=id).order_by('due')
+        ctx = {
+            "team": team,
+            "team_members": team_members,
+            "tasks": tasks
+        }
+        return render(request, "team.html", ctx)

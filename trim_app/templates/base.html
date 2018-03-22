@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head><meta charset="utf-8"></head>
+    <head>
+        <meta charset="utf-8">
+        {% load static %}
+        <link rel="stylesheet" type="text/css" href="{% static 'css/style.css' %}"/>
+    </head>
     <body>
         <h2>Welcome to TRIM (Team Responsibilities Intelligible Manager)</h2>
+        {% if messages %}
+            <p class="messages">
+                {% for message in messages %}
+                <p class="{{ message.tags }}">{{ message }}</p>
+                {% endfor %}
+            </p>
+        {% endif %}
         {% if request.user.is_authenticated %}
-        You are logged in as: {{ request.user.username }}
+        You are logged in as: {{ request.user.first_name }} {{ request.user.last_name }}
         <p><a href="{% url 'logout' %}">Log out</a></p>
         {% else %}
         <p><a href="{% url 'login' %}">Log in</a></p>

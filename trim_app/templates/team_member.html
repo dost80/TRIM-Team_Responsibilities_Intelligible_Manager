@@ -1,10 +1,10 @@
 {% extends "base.html" %}
 
 {% block content %}
-<p>Team: {{ team_member.team }}</p>
-<p>Team Member: {{ team_member.name }}</p>
+<h3>{{ team_member.name }}</h3>
+<p>Team: <a href="/team/{{ team_member.team_id }}/">{{ team_member.team }}</a></p>
 <p>Position: {{ team_member.position }}</p>
-Tasks:
+<h4>Tasks:</h4>
 <table>
     <tr>
         <th>Task</th>
@@ -19,7 +19,7 @@ Tasks:
     </tr>
     {% for task in tasks_responsible %}
     <tr>
-        <td>{{ task.name }}</td>
+        <td><a href="{% url 'task-details' task.pk %}">{{ task.name }}</a></td>
         <td>{{ task.get_priority_display }}</td>
         <td>{{ task.get_frequency_display }}</td>
         <td>{{ task.get_due_display }}</td>
@@ -31,7 +31,8 @@ Tasks:
     </tr>
     {% endfor %}
 </table>
-Tasks to approve:
+<br>
+<h4>Tasks to approve:</h4>
 <table>
     <tr>
         <th>Task</th>
@@ -43,10 +44,11 @@ Tasks to approve:
         <th>Approver</th>
         <th>Status</th>
         <th>End date</th>
+        <th></th>
     </tr>
     {% for task in tasks_approver %}
     <tr>
-        <td>{{ task.name }}</td>
+        <td><a href="{% url 'task-details' task.pk %}">{{ task.name }}</a></td>
         <td>{{ task.get_priority_display }}</td>
         <td>{{ task.get_frequency_display }}</td>
         <td>{{ task.get_due_display }}</td>
@@ -55,8 +57,11 @@ Tasks to approve:
         <td>{{ task.approver }}</td>
         <td><a href="{% url 'update-task' task.pk %}">{{ task.get_status_display }}</a></td>
         <td>{{ task.end_date }}</td>
+        <td><a href="{% url 'delete-task' task.pk %}">delete task</a></td>
     </tr>
     {% endfor %}
 </table>
+<p><a href="{% url 'create-task' %}">Add task</a></p>
+<p><a href="{% url 'task-list' %}">See all tasks</a></p>
 <p><a href="{% url 'main' %}">Back to main page</a></p>
 {% endblock %}

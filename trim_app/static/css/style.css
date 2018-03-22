@@ -1,0 +1,29 @@
+body {
+    font-family: "Times New Roman", serif;
+    background-color: aliceblue;
+}
+table {
+    margin: 0 0 40px 0;
+    width: 100%;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+    display: table;
+    border: 1px solid black;
+    border-collapse: collapse;
+    background-color: ghostwhite;
+}
+th {
+    border: 0.5px solid black;
+    border-collapse: collapse;
+    background-color: lightsteelblue;
+}
+td {
+    border: 0.5px solid black;
+    border-collapse: collapse;
+}
+h2 {
+    color: midnightblue;
+    text-align: center;
+}
+h3, h4, h5, h6 {
+    color: midnightblue;
+}

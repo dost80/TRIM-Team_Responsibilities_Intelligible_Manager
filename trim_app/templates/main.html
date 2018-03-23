@@ -18,6 +18,7 @@
             <th>Task</th>
             <th>Priority</th>
             <th>Frequency</th>
+            <th>Month</th>
             <th>Due</th>
             <th>Department</th>
             <th>Responsible</th>
@@ -30,6 +31,7 @@
             <td><a href="{% url 'task-details' task.pk %}">{{ task.name }}</a></td>
             <td>{{ task.get_priority_display }}</td>
             <td>{{ task.get_frequency_display }}</td>
+            <td>{{ task.get_month_display }}</td>
             <td>{{ task.get_due_display }}</td>
             <td>{{ task.department }}</td>
             <td>{{ task.responsible }}</td>

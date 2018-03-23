@@ -25,6 +25,22 @@ class TeamMember(models.Model):
         return self.name
 
 
+MONTHS= (
+    (1, 'Jan'),
+    (2, 'Feb'),
+    (3, 'Mar'),
+    (4, 'Apr'),
+    (5, 'May'),
+    (6, 'Jun'),
+    (7, 'Jul'),
+    (8, 'Aug'),
+    (9, 'Sep'),
+    (10, 'Oct'),
+    (11, 'Nov'),
+    (12, 'Dec'),
+)
+
+
 DAYS = (
     (1, 'middle month'),
     (2, 'D-5'),
@@ -59,7 +75,6 @@ STATUSES = (
     (1, 'not started'),
     (2, 'in progress'),
     (3, 'completed'),
-    (4, 'approved'),
 )
 
 
@@ -68,6 +83,7 @@ class Task(models.Model):
     description = models.TextField(default=None, blank=True)
     priority = models.IntegerField(choices=PRIORITIES)
     start_date = models.DateTimeField(default=datetime.now, blank=True)
+    month = models.IntegerField(choices=MONTHS)
     due = models.IntegerField(choices=DAYS)
     frequency = models.IntegerField(choices=FREQUENCIES)
     department = models.ForeignKey(Team, related_name='task_team', on_delete=models.CASCADE)
@@ -76,6 +92,9 @@ class Task(models.Model):
     approver = models.ForeignKey(TeamMember, related_name='task_approver', on_delete=models.CASCADE)
     status = models.IntegerField(choices=STATUSES)
     end_date = models.DateTimeField(default=None, blank=True, null=True)
+    approval = models.BooleanField(default=False)
+    approval_date = models.DateTimeField(default=None, blank=True, null=True)
+
 
     def __str__(self):
         return self.name

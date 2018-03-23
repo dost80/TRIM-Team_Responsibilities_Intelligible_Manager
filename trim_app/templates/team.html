@@ -15,24 +15,30 @@
         <th>Task</th>
         <th>Priority</th>
         <th>Frequency</th>
+        <th>Month</th>
         <th>Due</th>
         <th>Department</th>
         <th>Responsible</th>
         <th>Approver</th>
         <th>Status</th>
         <th>End date</th>
+        <th>Approval</th>
+        <th>Approval date</th>
     </tr>
     {% for task in tasks %}
     <tr>
         <td><a href="{% url 'task-details' task.pk %}">{{ task.name }}</a></td>
         <td>{{ task.get_priority_display }}</td>
         <td>{{ task.get_frequency_display }}</td>
+        <td>{{ task.get_month_display }}</td>
         <td>{{ task.get_due_display }}</td>
         <td>{{ task.department }}</td>
         <td>{{ task.responsible }}</td>
         <td>{{ task.approver }}</td>
         <td><a href="{% url 'update-task' task.pk %}">{{ task.get_status_display }}</a></td>
         <td>{{ task.end_date }}</td>
+        <td><a href="{% url 'update-approval' task.pk %}">{{ task.approval }}</a></td>
+        <td>{{ task.approval_date }}</td>
     </tr>
     {% endfor %}
 </table>

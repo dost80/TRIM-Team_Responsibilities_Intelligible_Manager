@@ -196,3 +196,23 @@ class TeamView(View):
             "tasks": tasks
         }
         return render(request, "team.html", ctx)
+
+
+class UpdateApproval(PermissionRequiredMixin, UpdateView):
+
+    permission_required = 'trim_app.change_task'
+    raise_exception = True
+
+    model = Task
+    fields = ['approval', 'approval_date']
+    success_url = reverse_lazy('task-list')
+
+
+class UpdatePerson(PermissionRequiredMixin, UpdateView):
+
+    permission_required = 'trim_app.change_task'
+    raise_exception = True
+
+    model = Task
+    fields = ['responsible', 'backup', 'approver']
+    success_url = reverse_lazy('task-list')

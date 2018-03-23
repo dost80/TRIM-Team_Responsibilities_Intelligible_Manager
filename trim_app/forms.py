@@ -37,7 +37,6 @@ STATUSES = (
     (1, 'not started'),
     (2, 'in progress'),
     (3, 'completed'),
-    (4, 'approved'),
 )
 
 

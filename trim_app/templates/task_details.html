@@ -5,13 +5,16 @@
 <p>Priority: {{ task.get_priority_display }}</p>
 <p>Frequency: {{ task.get_frequency_display }}</p>
 <p>Start date: {{ task.start_date }}</p>
+<p>Month: {{ task.get_month_display }}</p>
 <p>Due: {{ task.get_due_display }}</p>
 <p>Department: {{ task.department }}</p>
-<p>Responsible: {{ task.responsible }}</p>
-<p>Backup: {{ task.backup }}</p>
-<p>Approver: {{ task.approver }}</p>
-<p>Status: <a href="{% url 'update-task' task.pk %}">{{ task.get_status_display }}</a></p>
+<p>Responsible: {{ task.responsible }} <a href="{% url 'update-person' task.pk %}"> update </a></p>
+<p>Backup: {{ task.backup }} <a href="{% url 'update-person' task.pk %}"> update </a></p>
+<p>Approver: {{ task.approver }}<a href="{% url 'update-person' task.pk %}"> update </a></p></p>
+<p>Status: {{ task.get_status_display }}<a href="{% url 'update-task' task.pk %}"> update </a></p>
 <p>End date: {{ task.end_date }}</p>
+<p>Approval: {{ task.approval }}<a href="{% url 'update-approval' task.pk %}"> approve </a></p>
+<p>Approval date: {{ task.approval_date }}</p>
 <p><a href="{% url 'delete-task' task.pk %}">delete task</a></p>
 <p><a href="{% url 'task-list' %}">Back to task list</a></p>
 {% endblock %}

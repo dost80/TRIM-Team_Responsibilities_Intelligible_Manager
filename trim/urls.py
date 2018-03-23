@@ -19,7 +19,8 @@ from django.conf.urls import url
 from django.contrib import admin
 
 from trim_app.views import MainView, TaskListView, AddUserView, UserLoginView, UserLogoutView,\
-    TaskCreate, TaskDetailsView, UpdateTask, DeleteTask, TeamMemberView, AddTeamMemberView, TeamView
+    TaskCreate, TaskDetailsView, UpdateTask, DeleteTask, TeamMemberView, AddTeamMemberView, \
+    TeamView, UpdateApproval, UpdatePerson
 
 
 urlpatterns = [
@@ -36,6 +37,8 @@ urlpatterns = [
     url(r'^team_member/(?P<teammember_id>(\d)+)', TeamMemberView.as_view(), name="team-member"),
     url(r'^add_team_member$', AddTeamMemberView.as_view(), name="add-team-member"),
     url(r'^team/(?P<id>(\d)+)', TeamView.as_view(), name="team"),
+    url(r'^update_approval/(?P<pk>(\d)+)$', UpdateApproval.as_view(), name="update-approval"),
+    url(r'^update_person/(?P<pk>(\d)+)$', UpdatePerson.as_view(), name="update-person"),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
